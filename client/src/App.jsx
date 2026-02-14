@@ -1,0 +1,41 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import JobDetail from './pages/JobDetail';
+import CustomerLogin from './pages/CustomerLogin';
+import CustomerPortal from './pages/CustomerPortal';
+import LandingPage from './pages/LandingPage';
+import ProtectedRoute from './components/ProtectedRoute';
+
+import Register from './pages/Register';
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/customer-login" element={<CustomerLogin />} />
+          <Route path="/track" element={<CustomerPortal />} />
+          <Route path="/" element={<LandingPage />} />
+
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/jobs/:id" element={
+            <ProtectedRoute>
+              <JobDetail />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;
