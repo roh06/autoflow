@@ -50,8 +50,8 @@ export default function CustomerPortal() {
             {/* Mobile Header - White */}
             <nav className="p-6 sticky top-0 bg-white/90 backdrop-blur-sm z-50 flex justify-between items-center border-b border-gray-100">
                 <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-black flex items-center justify-center text-white font-serif font-bold text-xs">G</div>
-                    <span className="text-sm font-medium tracking-wide uppercase">GarageJira</span>
+                    <div className="w-6 h-6 bg-black flex items-center justify-center text-white font-serif font-bold text-xs">A</div>
+                    <span className="text-sm font-medium tracking-wide uppercase">Autoflow</span>
                 </div>
                 <button onClick={logout} className="text-gray-400 hover:text-black text-[10px] font-bold uppercase tracking-widest">Sign Out</button>
             </nav>

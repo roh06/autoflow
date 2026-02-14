@@ -20,8 +20,8 @@ export default function Dashboard() {
             {/* Sidebar - Minimal Light */}
             <aside className="w-64 bg-white border-r border-gray-100 flex flex-col fixed inset-y-0 z-20">
                 <div className="h-20 flex items-center px-8 border-b border-gray-100">
-                    <div className="w-8 h-8 bg-black flex items-center justify-center text-white font-serif font-bold text-lg">G</div>
-                    <span className="ml-3 font-medium tracking-wide uppercase text-sm">GarageJira</span>
+                    <div className="w-8 h-8 bg-black flex items-center justify-center text-white font-serif font-bold text-lg">A</div>
+                    <span className="ml-3 font-medium tracking-wide uppercase text-sm">Autoflow</span>
                 </div>
 
                 <nav className="flex-1 p-6 space-y-1">

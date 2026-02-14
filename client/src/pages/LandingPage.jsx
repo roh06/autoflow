@@ -19,10 +19,10 @@ export default function LandingPage() {
                     {/* Logo */}
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-black flex items-center justify-center text-white font-serif font-bold text-xl">
-                            G
+                            A
                         </div>
                         <span className="text-xl font-medium tracking-wide uppercase text-gray-900">
-                            Garage<span className="font-light text-gray-400">Jira</span>
+                            Auto<span className="font-light text-gray-400">flow</span>
                         </span>
                     </div>
 
@@ -116,8 +116,8 @@ export default function LandingPage() {
                 <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 mb-16">
                     <div className="col-span-1 md:col-span-2 space-y-6">
                         <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-black flex items-center justify-center text-white font-serif font-bold text-sm">G</div>
-                            <span className="text-lg font-medium tracking-wide uppercase">GarageJira</span>
+                            <div className="w-6 h-6 bg-black flex items-center justify-center text-white font-serif font-bold text-sm">A</div>
+                            <span className="text-lg font-medium tracking-wide uppercase">Autoflow</span>
                         </div>
                         <p className="text-gray-400 text-xs leading-relaxed max-w-xs font-light">
                             Redefining the auto service experience through design and technology.
@@ -141,13 +141,13 @@ export default function LandingPage() {
                         <h4 className="font-bold text-xs uppercase tracking-widest mb-6">Contact</h4>
                         <ul className="space-y-4 text-gray-500 text-xs font-medium">
                             <li>123 Service Lane, Auto City</li>
-                            <li>hello@garagejira.com</li>
+                            <li>hello@autoflow.com</li>
                             <li>(555) 123-4567</li>
                         </ul>
                     </div>
                 </div>
                 <div className="max-w-7xl mx-auto px-6 border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between text-[10px] text-gray-400 uppercase tracking-widest font-medium">
-                    <p>&copy; 2026 GarageJira Systems.</p>
+                    <p>&copy; 2026 Autoflow Systems.</p>
                     <div className="flex gap-6">
                         <span>Privacy Policy</span>
                         <span>Terms of Service</span>

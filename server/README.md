@@ -1,4 +1,4 @@
-# Garage Management System (GarageJira) Walkthrough
+# Autoflow - Garage Management System
 
 This guide will help you run and test the Garage Management System.
 
