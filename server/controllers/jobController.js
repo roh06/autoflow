@@ -2,6 +2,14 @@ const Job = require('../models/Job');
 const Vehicle = require('../models/Vehicle');
 const Customer = require('../models/Customer');
 
+// Helper to determine high-level status based on workflow index
+const deriveStatus = (workflow, index) => {
+    if (index === 0) return 'Pending';
+    if (index === workflow.length - 1) return 'Delivered';
+    if (index === workflow.length - 2) return 'Ready';
+    return 'In Progress';
+};
+
 // Get all jobs (for Kanban board)
 // Get all jobs (for Kanban board)
 const getJobs = async (req, res) => {

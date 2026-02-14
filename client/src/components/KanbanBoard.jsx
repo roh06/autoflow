@@ -28,6 +28,7 @@ export default function KanbanBoard() {
     };
 
     const handleStatusUpdate = async (jobId, newStatus, newStageIndex) => {
+        console.log("Updating Status:", { jobId, newStatus, newStageIndex });
         // Optimistic Update
         setJobs(prevJobs => prevJobs.map(job => {
             if (job._id === jobId) {

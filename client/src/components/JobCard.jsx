@@ -9,8 +9,10 @@ export default function JobCard({ job, onStatusUpdate }) {
     const currentStageName = workflow && workflow[currentStageIndex] ? workflow[currentStageIndex] : status;
 
     const nextStatus = () => {
+        console.log("Current Stage Index:", currentStageIndex, "Workflow:", workflow);
         if (workflow && currentStageIndex < workflow.length - 1) {
             // Update by Index
+            console.log("Moving to index:", currentStageIndex + 1);
             onStatusUpdate(job._id, null, currentStageIndex + 1);
         }
     };
