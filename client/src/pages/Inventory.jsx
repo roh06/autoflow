@@ -8,6 +8,7 @@ export default function Inventory() {
     const [loading, setLoading] = useState(true);
     const { token } = useAuth();
     const [showModal, setShowModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Stats
     const totalItems = items.length;
@@ -45,6 +46,12 @@ export default function Inventory() {
         }
     };
 
+    // Filtered Items
+    const filteredItems = items.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.sku.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) return <div className="p-12 text-center text-xs font-bold uppercase tracking-widest text-gray-400">Loading Inventory...</div>;
 
     return (
@@ -74,6 +81,8 @@ export default function Inventory() {
                     <Search size={14} />
                     <input
                         placeholder="Search SKU or Name..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         className="bg-transparent outline-none text-xs font-medium uppercase tracking-wide w-full"
                     />
                 </div>
@@ -99,12 +108,14 @@ export default function Inventory() {
                         </tr>
                     </thead>
                     <tbody className="text-sm">
-                        {items.length === 0 ? (
+                        {filteredItems.length === 0 ? (
                             <tr>
-                                <td colSpan="6" className="py-12 text-center text-gray-400 italic font-light">Inventory is empty. Add your first item.</td>
+                                <td colSpan="6" className="py-12 text-center text-gray-400 italic font-light">
+                                    {items.length === 0 ? 'Inventory is empty. Add your first item.' : 'No items match your search.'}
+                                </td>
                             </tr>
                         ) : (
-                            items.map(item => (
+                            filteredItems.map(item => (
                                 <tr key={item._id} className="group hover:bg-gray-50 transition border-b border-gray-50">
                                     <td className="py-4 font-mono text-gray-500 text-xs">{item.sku}</td>
                                     <td className="py-4 font-medium text-gray-900">

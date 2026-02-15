@@ -69,10 +69,12 @@ export default function LandingPage() {
 
                     <div className="md:w-1/2 relative">
                         <div className="aspect-[4/5] bg-gray-100 overflow-hidden relative">
-                            {/* Placeholder for High-End Garage Image */}
-                            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-400">
-                                <span className="font-serif italic text-4xl opacity-20">Image</span>
-                            </div>
+                            {/* High-End Garage Image */}
+                            <img
+                                src="/hero-car.png"
+                                alt="Premium Auto Service"
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
                             {/* Overlay Stats */}
                             <div className="absolute bottom-8 left-8 bg-white p-6 shadow-sm border border-gray-100 max-w-xs">
                                 <div className="flex items-center gap-2 mb-2 text-yellow-500">

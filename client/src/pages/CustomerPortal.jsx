@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Camera, Check } from 'lucide-react';
 export default function CustomerPortal() {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ export default function CustomerPortal() {
                 }
             } catch (err) {
                 console.error(err);
+                setError('Failed to load orders. Please try again.');
             } finally {
                 setLoading(false);
             }
@@ -45,6 +47,13 @@ export default function CustomerPortal() {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-white text-gray-400 text-xs font-bold uppercase tracking-widest">Loading...</div>;
 
+    if (error) return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center p-6">
+            <p className="text-red-500 text-sm font-medium mb-4">{error}</p>
+            <button onClick={() => window.location.reload()} className="text-xs font-bold uppercase tracking-widest border-b border-black">Retry</button>
+        </div>
+    );
+
     return (
         <div className="min-h-screen bg-white flex flex-col font-sans text-gray-900">
             {/* Mobile Header - White */}
@@ -59,7 +68,7 @@ export default function CustomerPortal() {
             <main className="flex-1 p-6 max-w-lg mx-auto w-full pb-20">
                 {jobs.length === 0 ? (
                     <div className="text-center mt-20">
-                        <p className="text-gray-400 text-sm font-light">No active orders found.</p>
+                        <p className="text-gray-400 text-sm font-light">No active orders found for this number.</p>
                     </div>
                 ) : (
                     <div className="space-y-12">
@@ -91,49 +100,55 @@ export default function CustomerPortal() {
                                 <div className="grid grid-cols-2 gap-8 border-y border-gray-100 py-8">
                                     <div>
                                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Vehicle</p>
-                                        <p className="text-sm font-medium">{selectedJob.vehicle.year} {selectedJob.vehicle.make} {selectedJob.vehicle.model}</p>
+                                        <p className="text-sm font-medium">
+                                            {selectedJob.vehicle ? `${selectedJob.vehicle.year} ${selectedJob.vehicle.make} ${selectedJob.vehicle.model}` : 'Vehicle Info Unavailable'}
+                                        </p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Plate</p>
-                                        <p className="text-sm font-mono">{selectedJob.vehicle.plateNumber}</p>
+                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Service Center</p>
+                                        <p className="text-sm font-medium">{selectedJob.garage?.name || 'Main Garage'}</p>
                                     </div>
                                 </div>
 
                                 {/* Timeline - Vertical Line */}
                                 <div className="relative pl-8 border-l border-gray-100 space-y-10">
-                                    {[...selectedJob.updates].reverse().map((update, idx) => (
-                                        <div key={idx} className="relative">
-                                            {/* Dot */}
-                                            <div className={`absolute -left-[37px] top-1.5 w-3 h-3 rounded-full border-2 border-white shadow-sm ${idx === 0 ? 'bg-black' : 'bg-gray-200'}`}></div>
+                                    {selectedJob.updates && selectedJob.updates.length > 0 ? (
+                                        [...selectedJob.updates].reverse().map((update, idx) => (
+                                            <div key={idx} className="relative">
+                                                {/* Dot */}
+                                                <div className={`absolute -left-[37px] top-1.5 w-3 h-3 rounded-full border-2 border-white shadow-sm ${idx === 0 ? 'bg-black' : 'bg-gray-200'}`}></div>
 
-                                            <div className="space-y-2">
-                                                <div className="flex justify-between items-baseline">
-                                                    <span className={`text-sm font-bold uppercase tracking-wide ${idx === 0 ? 'text-black' : 'text-gray-400'}`}>
-                                                        {update.status}
-                                                    </span>
-                                                    <span className="text-[10px] text-gray-400 font-mono">
-                                                        {new Date(update.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </span>
-                                                </div>
-
-                                                {update.note && (
-                                                    <p className="text-xs text-gray-500 font-light leading-relaxed">
-                                                        {update.note}
-                                                    </p>
-                                                )}
-
-                                                {update.photos && update.photos.length > 0 && (
-                                                    <div className="flex gap-3 pt-2">
-                                                        {update.photos.map((photo, pIdx) => (
-                                                            <div key={pIdx} className="w-20 h-20 bg-gray-50 flex items-center justify-center text-gray-300 hover:text-black hover:bg-gray-100 transition cursor-pointer border border-gray-100">
-                                                                <Camera size={16} strokeWidth={1.5} />
-                                                            </div>
-                                                        ))}
+                                                <div className="space-y-2">
+                                                    <div className="flex justify-between items-baseline">
+                                                        <span className={`text-sm font-bold uppercase tracking-wide ${idx === 0 ? 'text-black' : 'text-gray-400'}`}>
+                                                            {update.status}
+                                                        </span>
+                                                        <span className="text-[10px] text-gray-400 font-mono">
+                                                            {update.timestamp ? new Date(update.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                                        </span>
                                                     </div>
-                                                )}
+
+                                                    {update.note && (
+                                                        <p className="text-xs text-gray-500 font-light leading-relaxed">
+                                                            {update.note}
+                                                        </p>
+                                                    )}
+
+                                                    {update.photos && update.photos.length > 0 && (
+                                                        <div className="flex gap-3 pt-2">
+                                                            {update.photos.map((photo, pIdx) => (
+                                                                <div key={pIdx} className="w-20 h-20 bg-gray-50 flex items-center justify-center text-gray-300 hover:text-black hover:bg-gray-100 transition cursor-pointer border border-gray-100">
+                                                                    <Camera size={16} strokeWidth={1.5} />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-400 text-sm italic">No updates yet.</p>
+                                    )}
                                 </div>
 
                                 <div className="text-center pt-8">

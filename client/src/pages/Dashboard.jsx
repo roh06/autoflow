@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import KanbanBoard from '../components/KanbanBoard';
 import Inventory from './Inventory';
+import VehicleList from '../components/VehicleList';
+import Profile from '../components/Profile';
 import AddJobModal from '../components/AddJobModal';
-import { Plus, LayoutGrid, Settings, LogOut, Search, Package, Command } from 'lucide-react';
+import { Plus, LayoutGrid, Settings, LogOut, Search, Package, Command, Car } from 'lucide-react';
 
 export default function Dashboard() {
     const { logout, user } = useAuth();
-    const [activeTab, setActiveTab] = useState('shop'); // 'shop' or 'inventory'
+    const [activeTab, setActiveTab] = useState('shop'); // 'shop', 'inventory', 'vehicles', 'profile'
     const [showModal, setShowModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
@@ -33,6 +35,12 @@ export default function Dashboard() {
                         <LayoutGrid size={16} strokeWidth={1.5} /> Shop Floor
                     </button>
                     <button
+                        onClick={() => setActiveTab('vehicles')}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest transition rounded-sm ${activeTab === 'vehicles' ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-black'}`}
+                    >
+                        <Car size={16} strokeWidth={1.5} /> Vehicles
+                    </button>
+                    <button
                         onClick={() => setActiveTab('inventory')}
                         className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest transition rounded-sm ${activeTab === 'inventory' ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-black'}`}
                     >
@@ -41,7 +49,10 @@ export default function Dashboard() {
                 </nav>
 
                 <div className="p-6 border-t border-gray-100">
-                    <button className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition">
+                    <button
+                        onClick={() => setActiveTab('profile')}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest transition rounded-sm ${activeTab === 'profile' ? 'bg-black text-white' : 'text-gray-400 hover:text-black'}`}
+                    >
                         <Settings size={16} strokeWidth={1.5} /> Settings
                     </button>
                     <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-red-600 transition mt-2">
@@ -54,14 +65,25 @@ export default function Dashboard() {
             <main className="flex-1 ml-64 flex flex-col h-screen overflow-hidden bg-white">
                 {/* Header - Transparent/Minimal */}
                 <header className="h-20 bg-white/80 backdrop-blur-sm border-b border-gray-100 flex items-center justify-between px-8 z-10 sticky top-0">
-                    <div className="flex items-center gap-4 text-gray-400 w-96 bg-gray-50 px-4 py-2 rounded-sm border border-transparent focus-within:border-gray-200 transition">
-                        <Search size={16} strokeWidth={1.5} />
-                        <input
-                            placeholder={activeTab === 'shop' ? "Search Job ID..." : "Search Item..."}
-                            className="bg-transparent outline-none text-gray-900 placeholder-gray-400 w-full text-xs font-medium uppercase tracking-wide"
-                        />
-                        <span className="text-[10px] bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-400 hidden lg:inline-block"><Command size={10} className="inline" /> K</span>
+                    <div className="flex items-center gap-6">
+                        {/* Garage Name Badge */}
+                        <div className="flex items-center gap-2 pr-6 border-r border-gray-200">
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <span className="text-sm font-bold uppercase tracking-wide text-gray-900">
+                                {user?.garageName || 'My Garage'}
+                            </span>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-gray-400 w-80 bg-gray-50 px-4 py-2 rounded-sm border border-transparent focus-within:border-gray-200 transition">
+                            <Search size={16} strokeWidth={1.5} />
+                            <input
+                                placeholder="Search..."
+                                className="bg-transparent outline-none text-gray-900 placeholder-gray-400 w-full text-xs font-medium uppercase tracking-wide"
+                            />
+                            <span className="text-[10px] bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-400 hidden lg:inline-block"><Command size={10} className="inline" /> K</span>
+                        </div>
                     </div>
+
                     {activeTab === 'shop' && (
                         <button
                             onClick={() => setShowModal(true)}
@@ -86,8 +108,12 @@ export default function Dashboard() {
                                 <KanbanBoard key={refreshKey} />
                             </div>
                         </div>
-                    ) : (
+                    ) : activeTab === 'vehicles' ? (
+                        <VehicleList />
+                    ) : activeTab === 'inventory' ? (
                         <Inventory />
+                    ) : (
+                        <Profile />
                     )}
                 </div>
             </main>

@@ -26,7 +26,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/customers', customerRoutes);
+app.use('/api/customers', customerRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/garages', require('./routes/garages'));
+app.use('/api/invoices', require('./routes/invoices'));
 
 app.get('/', (req, res) => {
     res.send('Garage Management System API is running');

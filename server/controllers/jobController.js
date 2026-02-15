@@ -151,13 +151,24 @@ const addJobUpdate = async (req, res) => {
     }
 };
 
-// Get jobs for authenticated customer
+// Get jobs for authenticated customer (Unified View)
 const getMyJobs = async (req, res) => {
     try {
-        // req.user.id is the customer ID from the token
-        const jobs = await Job.find({ customer: req.user.id })
+        // 1. Find all Customer records for this phone number (across all garages)
+        // If phone is in token, use it. Fallback to just ID if not (legacy tokens)
+        let customerIds = [req.user.id];
+
+        if (req.user.phone) {
+            const customers = await Customer.find({ phone: req.user.phone });
+            customerIds = customers.map(c => c._id);
+        }
+
+        // 2. Find jobs linked to ANY of these customer IDs
+        const jobs = await Job.find({ customer: { $in: customerIds } })
             .populate('vehicle')
+            .populate('garage', 'name') // Populate Garage Name for UI
             .sort({ createdAt: -1 });
+
         res.json(jobs);
     } catch (err) {
         res.status(500).json({ error: err.message });

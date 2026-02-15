@@ -3,6 +3,8 @@ const Customer = require('../models/Customer');
 const createCustomer = async (req, res) => {
     try {
         const { name, phone, email } = req.body;
+        console.log("Creating Customer:", { name, phone, email, garageId: req.user.garageId });
+
         // Check if customer exists IN THIS GARAGE
         let customer = await Customer.findOne({ phone, garage: req.user.garageId });
 
@@ -17,6 +19,7 @@ const createCustomer = async (req, res) => {
         await customer.save();
         res.status(201).json(customer);
     } catch (err) {
+        console.error("Customer Creation Error:", err);
         res.status(500).json({ error: err.message });
     }
 };

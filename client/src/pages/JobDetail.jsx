@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, User, Calendar, Clock, CheckCircle, Car } from 'lucide-react';
+import { ArrowLeft, User, Calendar, Clock, CheckCircle, Car, Receipt } from 'lucide-react';
+import InvoiceModal from '../components/InvoiceModal';
 
 export default function JobDetail() {
     const { id } = useParams();
@@ -10,6 +11,7 @@ export default function JobDetail() {
     const [job, setJob] = useState(null);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showInvoice, setShowInvoice] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,9 +43,17 @@ export default function JobDetail() {
 
     return (
         <div className="min-h-screen bg-white font-sans text-gray-900 p-8 md:p-12">
-            <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-gray-400 hover:text-black text-[10px] font-bold uppercase tracking-widest mb-12 transition group">
-                <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
-            </button>
+            <div className="flex justify-between items-center mb-12">
+                <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-gray-400 hover:text-black text-[10px] font-bold uppercase tracking-widest transition group">
+                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
+                </button>
+                <button
+                    onClick={() => setShowInvoice(true)}
+                    className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition"
+                >
+                    <Receipt size={14} /> Generate Invoice
+                </button>
+            </div>
 
             {/* Main Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-gray-100 pb-8">
@@ -193,6 +203,8 @@ export default function JobDetail() {
                     </div>
                 )}
             </div>
+
+            {showInvoice && <InvoiceModal job={job} onClose={() => setShowInvoice(false)} />}
         </div>
     );
 }

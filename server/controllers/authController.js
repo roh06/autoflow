@@ -46,7 +46,13 @@ const register = async (req, res) => {
         res.status(201).json({
             message: 'Garage registered successfully',
             token,
-            user: { id: user._id, username: user.username, role: user.role, garageId: garage._id }
+            user: {
+                id: user._id,
+                username: user.username,
+                role: user.role,
+                garageId: garage._id,
+                garageName: garage.name
+            }
         });
     } catch (err) {
         console.error(err);
@@ -57,7 +63,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).populate('garage');
         if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -67,7 +73,7 @@ const login = async (req, res) => {
         const payload = {
             id: user._id,
             role: user.role,
-            garageId: user.garage
+            garageId: user.garage?._id
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
@@ -78,7 +84,8 @@ const login = async (req, res) => {
                 id: user._id,
                 username: user.username,
                 role: user.role,
-                garageId: user.garage
+                garageId: user.garage?._id,
+                garageName: user.garage?.name // Return Garage Name
             }
         });
     } catch (err) {
@@ -95,13 +102,15 @@ const customerLogin = async (req, res) => {
         let customer = await Customer.findOne({ phone }).populate('garage');
 
         if (!customer) {
-            // Option: Auto-register customer if they don't exist? 
-            // For now, let's assume they must be registered by the garage owner first.
             return res.status(404).json({ message: 'Phone number not found. Please contact the garage.' });
         }
 
+        // Safety check for garage
+        const garageId = customer.garage ? customer.garage._id : null;
+        const garageName = customer.garage ? customer.garage.name : 'Unknown Garage';
+
         const token = jwt.sign(
-            { id: customer._id, role: 'customer', garageId: customer.garage._id },
+            { id: customer._id, role: 'customer', garageId, phone: customer.phone },
             process.env.JWT_SECRET || 'secret',
             { expiresIn: '7d' }
         );
@@ -111,8 +120,8 @@ const customerLogin = async (req, res) => {
                 id: customer._id,
                 name: customer.name,
                 phone: customer.phone,
-                garageId: customer.garage._id,
-                garageName: customer.garage.name
+                garageId,
+                garageName
             }
         });
     } catch (err) {
