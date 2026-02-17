@@ -32,7 +32,7 @@ app.use('/api/garages', require('./routes/garages'));
 app.use('/api/invoices', require('./routes/invoices'));
 
 app.get('/', (req, res) => {
-    res.send('Garage Management System API is running');
+    res.send('Garage Management System is Up');
 });
 
 // Start Server
