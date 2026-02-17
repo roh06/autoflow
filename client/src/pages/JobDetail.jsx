@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, User, Calendar, Clock, CheckCircle, Car, Receipt } from 'lucide-react';
 import InvoiceModal from '../components/InvoiceModal';
 
+import QRCode from 'react-qr-code';
+
 export default function JobDetail() {
     const { id } = useParams();
     const { token } = useAuth();
@@ -12,6 +14,7 @@ export default function JobDetail() {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showInvoice, setShowInvoice] = useState(false);
+    const [showQR, setShowQR] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,18 +44,28 @@ export default function JobDetail() {
     if (loading) return <div className="p-12 text-center text-gray-400 text-xs font-bold uppercase tracking-widest">Loading Details...</div>;
     if (!job) return <div className="p-12 text-center text-red-500 text-xs font-bold uppercase tracking-widest">Job Not Found</div>;
 
+    const qrValue = `${window.location.origin}/mobile/dashboard?jobId=${job._id}`;
+
     return (
-        <div className="min-h-screen bg-white font-sans text-gray-900 p-8 md:p-12">
+        <div className="min-h-screen bg-white font-sans text-gray-900 p-8 md:p-12 relative">
             <div className="flex justify-between items-center mb-12">
                 <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-gray-400 hover:text-black text-[10px] font-bold uppercase tracking-widest transition group">
                     <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
                 </button>
-                <button
-                    onClick={() => setShowInvoice(true)}
-                    className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition"
-                >
-                    <Receipt size={14} /> Generate Invoice
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => setShowQR(true)}
+                        className="flex items-center gap-2 border border-black text-black px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition"
+                    >
+                        <User size={14} /> Job QR
+                    </button>
+                    <button
+                        onClick={() => setShowInvoice(true)}
+                        className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition"
+                    >
+                        <Receipt size={14} /> Generate Invoice
+                    </button>
+                </div>
             </div>
 
             {/* Main Header */}
@@ -203,6 +216,33 @@ export default function JobDetail() {
                     </div>
                 )}
             </div>
+
+            {/* QR Code Modal */}
+            {showQR && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+                    <div className="bg-white p-8 max-w-sm w-full shadow-2xl rounded-sm text-center">
+                        <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">Job QR Code</h2>
+                        <div className="flex justify-center mb-6">
+                            <QRCode value={qrValue} size={256} />
+                        </div>
+                        <p className="text-xs text-gray-500 font-mono mb-6 word-break-all">{qrValue}</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => window.print()}
+                                className="flex-1 bg-black text-white py-3 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition"
+                            >
+                                Print
+                            </button>
+                            <button
+                                onClick={() => setShowQR(false)}
+                                className="flex-1 border border-gray-200 text-gray-900 py-3 text-xs font-bold uppercase tracking-widest hover:bg-gray-50 transition"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {showInvoice && <InvoiceModal job={job} onClose={() => setShowInvoice(false)} />}
         </div>

@@ -4,12 +4,13 @@ import KanbanBoard from '../components/KanbanBoard';
 import Inventory from './Inventory';
 import VehicleList from '../components/VehicleList';
 import Profile from '../components/Profile';
+import Staff from './Staff';
 import AddJobModal from '../components/AddJobModal';
-import { Plus, LayoutGrid, Settings, LogOut, Search, Package, Command, Car } from 'lucide-react';
+import { Plus, LayoutGrid, Settings, LogOut, Search, Package, Command, Car, Users } from 'lucide-react';
 
 export default function Dashboard() {
     const { logout, user } = useAuth();
-    const [activeTab, setActiveTab] = useState('shop'); // 'shop', 'inventory', 'vehicles', 'profile'
+    const [activeTab, setActiveTab] = useState('shop'); // 'shop', 'inventory', 'vehicles', 'staff', 'profile'
     const [showModal, setShowModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
@@ -45,6 +46,12 @@ export default function Dashboard() {
                         className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest transition rounded-sm ${activeTab === 'inventory' ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-black'}`}
                     >
                         <Package size={16} strokeWidth={1.5} /> Inventory
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('staff')}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase tracking-widest transition rounded-sm ${activeTab === 'staff' ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-black'}`}
+                    >
+                        <Users size={16} strokeWidth={1.5} /> Team
                     </button>
                 </nav>
 
@@ -112,6 +119,8 @@ export default function Dashboard() {
                         <VehicleList />
                     ) : activeTab === 'inventory' ? (
                         <Inventory />
+                    ) : activeTab === 'staff' ? (
+                        <Staff />
                     ) : (
                         <Profile />
                     )}

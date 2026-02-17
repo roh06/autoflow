@@ -9,6 +9,9 @@ import LandingPage from './pages/LandingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import Register from './pages/Register';
+import TechnicianDashboard from './pages/TechnicianDashboard';
+
+import TrackOrder from './pages/TrackOrder';
 
 function App() {
   return (
@@ -19,8 +22,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/customer-login" element={<CustomerLogin />} />
-          <Route path="/track" element={<CustomerPortal />} />
-          <Route path="/" element={<LandingPage />} />
+
+          {/* Tracking Flow */}
+          <Route path="/track-login" element={<TrackOrder />} />
+          <Route path="/track/:id" element={<CustomerPortal />} />
 
           <Route path="/dashboard" element={
             <ProtectedRoute>
@@ -30,6 +35,12 @@ function App() {
           <Route path="/dashboard/jobs/:id" element={
             <ProtectedRoute>
               <JobDetail />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/mobile/dashboard" element={
+            <ProtectedRoute>
+              <TechnicianDashboard />
             </ProtectedRoute>
           } />
         </Routes>

@@ -33,4 +33,30 @@ const getCustomers = async (req, res) => {
     }
 };
 
-module.exports = { createCustomer, getCustomers };
+const Job = require('../models/Job');
+
+const trackByPhone = async (req, res) => {
+    try {
+        const { phone } = req.params;
+        // Find customer by phone (across any garage for now, or refine if needed)
+        const customer = await Customer.findOne({ phone });
+
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        // Find the MOST RECENT active job for this customer
+        const job = await Job.findOne({ customer: customer._id, active: true })
+            .sort({ createdAt: -1 });
+
+        if (!job) {
+            return res.status(404).json({ message: 'No active jobs found for this number' });
+        }
+
+        res.json({ jobId: job._id });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+module.exports = { createCustomer, getCustomers, trackByPhone };

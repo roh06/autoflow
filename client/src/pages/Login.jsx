@@ -12,9 +12,13 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(username, password);
-        if (success) {
-            navigate('/dashboard');
+        const result = await login(username, password);
+        if (result.success) {
+            if (result.user.role === 'technician' || result.user.role === 'staff') {
+                navigate('/mobile/dashboard');
+            } else {
+                navigate('/dashboard');
+            }
         } else {
             setError('Invalid credentials');
         }
